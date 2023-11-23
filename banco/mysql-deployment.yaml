@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql-deployment
+spec:
+  replicas: 1  # Defina o número de réplicas desejado
+  selector:
+    matchLabels:
+      app: mysql
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      containers:
+        - name: mysql
+          image: mysql:latest  # Versão do MySQL a ser usada
+          env:
+            - name: root
+              value: "password"  # Sua senha aqui
+          ports:
+            - containerPort: 3306  # Porta do MySQL
+          volumeMounts:
+            - name: mysql-persistent-storage
+              mountPath: /var/lib/mysql  # Caminho de armazenamento persistente do MySQL
+      volumes:
+        - name: mysql-persistent-storage
+          persistentVolumeClaim:
+            claimName: mysql-pv-claim  # Nome da solicitação de volume persistente
